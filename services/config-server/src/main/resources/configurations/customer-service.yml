@@ -1,0 +1,10 @@
+spring:
+    data:
+      postgresql:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5432/kenac_customer_db
+        username: postgres
+        password: root
+
+server:
+    port: 5091
