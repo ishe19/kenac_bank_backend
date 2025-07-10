@@ -17,4 +17,8 @@ public interface ClientService {
     ResponseEntity<GenericResponse> getClientByUserId(Long userId);
 
     ResponseEntity<GenericResponse> blacklistClient(String clientCode);
+
+    ResponseEntity<GenericResponse> getBlacklistedClients();
+
+    ResponseEntity<GenericResponse> isClientBlacklisted(Long userId);
 }

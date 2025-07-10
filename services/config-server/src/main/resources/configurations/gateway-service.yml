@@ -1,0 +1,22 @@
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: client-service
+          uri: lb:http://CLIENT-SERVICE
+          predicates:
+            - Path=/client/**
+        - id: banking-service
+          uri: lb:http://BANKING-SERVICE
+          predicates:
+            - Path=/banking/**
+        - id: auth-service
+          uri: lb:http://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
+
+server:
+  port: 5980

@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kenac_auth_db
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 5093
+
+application:
+  security:
+    jwt:
+      secret-key: 8f306dcc8a994624b2769eeb028d0dc796a532cf41a18c2ffbfdbd42750bc7d3
+      expiration: 86400000
+      refresh-token:
+        expiration: 604800000
+  config:
+    client-url: http://localhost:5980/client
+    banking-url: http://localhost:5980/banking

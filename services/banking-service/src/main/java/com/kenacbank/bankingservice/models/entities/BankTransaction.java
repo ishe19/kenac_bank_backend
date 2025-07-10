@@ -44,9 +44,9 @@ public class BankTransaction {
     private BankAccount bankAccount;
     @Enumerated(EnumType.STRING)
     private TransactionStatus status;
-
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Double amount;
+    private String description;
 
 }

@@ -42,10 +42,20 @@ public class ClientController {
         return clientService.getClientByUserId(userId);
     }
 
-
     @PutMapping("/blacklist/{clientCode}")
     public ResponseEntity<GenericResponse> blacklistClient(@PathVariable String clientCode) {
         return clientService.blacklistClient(clientCode);
     }
+
+    @GetMapping("/blacklisted")
+    public ResponseEntity<GenericResponse> getBlacklistedClients() {
+        return clientService.getBlacklistedClients();
+    }
+
+    @GetMapping("/is-blacklisted/{userId}")
+    public ResponseEntity<GenericResponse> isClientBlacklisted(@PathVariable Long userId) {
+        return clientService.isClientBlacklisted(userId);
+    }
+
 
 }

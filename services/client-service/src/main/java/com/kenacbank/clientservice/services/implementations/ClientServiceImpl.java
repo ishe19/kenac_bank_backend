@@ -222,4 +222,78 @@ public class ClientServiceImpl implements ClientService {
             return ResponseEntity.badRequest().body(new GenericResponse("Failed to blacklist client", false));
         }
     }
+
+
+    /**
+     * Retrieves all clients who are blacklisted.
+     *
+     * <p>This method queries the ClientRepository for clients with a status of BLACKLISTED,
+     * maps them to DTOs, and returns them in a response. If no blacklisted clients are found,
+     * it logs this information and returns an appropriate response. In case of any exceptions,
+     * it logs the error and returns a failure response.</p>
+     *
+     * @return a ResponseEntity containing a GenericResponse with the list of blacklisted clients
+     */
+    @Override
+    public ResponseEntity<GenericResponse> getBlacklistedClients() {
+        try{
+            List<ClientDto> blacklistedClients = clientRepository.findByStatus(CustomerStatus.BLACKLISTED)
+                    .stream()
+                    .map(dtoMapper::mapToClientDto)
+                    .toList();
+
+            if (blacklistedClients.isEmpty()) {
+                LOGGER.info("No blacklisted clients found");
+                return ResponseEntity.ok(new GenericResponse("No blacklisted clients found", true, blacklistedClients));
+            }
+
+            LOGGER.info("Successfully retrieved {} blacklisted clients", blacklistedClients.size());
+
+            return ResponseEntity.ok(new GenericResponse("Blacklisted clients retrieved successfully", true, blacklistedClients));
+
+        } catch (Exception e) {
+            LOGGER.error("Error retrieving blacklisted clients: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(new GenericResponse("Failed to retrieve blacklisted clients", false));
+        }
+    }
+
+    /**
+     * Checks if a client with the specified user ID is blacklisted.
+     *
+     * <p>This method retrieves the client from the repository using the provided
+     * user ID and checks if their status is BLACKLISTED. It logs the result and
+     * returns a ResponseEntity containing a GenericResponse indicating whether
+     * the client is blacklisted or not. If the client is not found, it logs a
+     * warning and returns a response indicating the client was not found. In
+     * case of any exceptions, it logs the error and returns a failure response.</p>
+     *
+     * @param userId the ID of the user to check for blacklist status
+     * @return a ResponseEntity containing a GenericResponse indicating if the client is blacklisted
+     */
+    @Override
+    public ResponseEntity<GenericResponse> isClientBlacklisted(Long userId) {
+        try{
+            Optional<Client> optionalClient = clientRepository.findById(userId);
+
+            if (optionalClient.isEmpty()) {
+                LOGGER.warn("Client with user ID: {} not found", userId);
+                return ResponseEntity.ok(new GenericResponse("Client not found", false));
+            }
+
+            Client client = optionalClient.get();
+            boolean isBlacklisted = client.getStatus() == CustomerStatus.BLACKLISTED;
+
+            if (isBlacklisted) {
+                LOGGER.info("Client with user ID: {} is blacklisted", userId);
+                return ResponseEntity.ok(new GenericResponse("Client is blacklisted", true));
+            } else {
+                LOGGER.info("Client with user ID: {} is not blacklisted", userId);
+                return ResponseEntity.ok(new GenericResponse("Client is not blacklisted", false));
+            }
+
+        } catch (Exception e) {
+            LOGGER.error("Error checking if client is blacklisted: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(new GenericResponse("Failed to check if client is blacklisted", false));
+        }
+    }
 }

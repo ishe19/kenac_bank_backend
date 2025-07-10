@@ -32,9 +32,9 @@ import java.time.LocalDateTime;
 @Table(name = "clients")
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Getter
 @Setter
+@Builder
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

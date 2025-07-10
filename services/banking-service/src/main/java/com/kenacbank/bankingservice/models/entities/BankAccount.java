@@ -43,7 +43,6 @@ public class BankAccount {
     private BankAccountStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
     private LocalDateTime closedAt;
     private Long approvedBy;
 

@@ -17,13 +17,11 @@ spring:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-  flyway:
-    baseline-on-migrate: true
-    enabled: true
-    baseline-description: "init"
-    baseline-version: 0
-    user: ${spring.datasource.username}
-    password: ${spring.datasource.password}
 
 server:
     port: 5091
+
+application:
+  config:
+    banking-url: http://localhost:5980/banking
+    auth-url: http://localhost:5980/auth
