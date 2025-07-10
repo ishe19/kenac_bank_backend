@@ -30,8 +30,8 @@ public class AuthServiceImpl implements AuthService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceImpl.class);
 
-    private KenacUserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final KenacUserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final ClientUserClient userClient;
 
     @Override

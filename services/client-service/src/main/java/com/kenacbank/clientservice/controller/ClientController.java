@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ClientController {
 
-    private ClientService clientService;
+    private final ClientService clientService;
 
 
     @PostMapping("/register")
