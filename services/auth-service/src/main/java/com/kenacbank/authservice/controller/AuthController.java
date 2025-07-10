@@ -52,5 +52,9 @@ public class AuthController {
         return authService.resetPassword(passwordResetRequest);
     }
 
+    @GetMapping("/logged-in")
+    public ResponseEntity<GenericResponse> getLoggedInUser(){
+        return authService.getLoggedInUser();
+    }
 
 }

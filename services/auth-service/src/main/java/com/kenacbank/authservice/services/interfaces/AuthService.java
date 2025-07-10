@@ -20,4 +20,6 @@ public interface AuthService {
     ResponseEntity<GenericResponse> forgotPassword(String email);
 
     ResponseEntity<GenericResponse> resetPassword(PasswordResetRequest passwordResetRequest);
+
+    ResponseEntity<GenericResponse> getLoggedInUser();
 }
