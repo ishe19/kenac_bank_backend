@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @FeignClient(name = "client-service", url = "${application.config.client-url}")
 public interface ClientUserClient {
-
     @PostMapping("/register")
     Optional<GenericResponse> createClient(@RequestBody ClientRegisterRequest request);
 
