@@ -1,48 +1,83 @@
+version: '3.9'
+
 services:
+
+  config-service:
+    build: ./config-service
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+    networks:
+      - kenac-net
+
+  discovery-server:
+    build: ./discovery-server
+    ports:
+      - "8761:8761"
+    networks:
+      - kenac-net
+    depends_on:
+      - config-service
+
+  gateway-service:
+    build: ./gateway-service
+    ports:
+      - "5980:5980"
+    networks:
+      - kenac-net
+    depends_on:
+      - config-service
+      - discovery-server
+
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "5090:5090"
+    networks:
+      - kenac-net
+    depends_on:
+      - discovery-server
+      - config-service
+      - postgres
+
+  client-service:
+    build: ./client-service
+    ports:
+      - "5091:5091"
+    networks:
+      - kenac-net
+    depends_on:
+      - discovery-server
+      - config-service
+      - postgres
+
+  banking-service:
+    build: ./banking-service
+    ports:
+      - "5092:5092"
+    networks:
+      - kenac-net
+    depends_on:
+      - discovery-server
+      - config-service
+      - postgres
+
   postgres:
-    container_name: kenac_pg_sql
-    image: postgres
+    image: postgres:14
+    restart: always
     environment:
-      POSTGRES_USER: kenac
-      POSTGRES_PASSWORD: kenac321@
-      POSTGRES_DB: kenac_db
-      PGDATA: /var/lib/postgresql/data
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
     volumes:
-        - postgres:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5441:5432"
     networks:
-      - kenac_bank_network
-    restart: unless-stopped
-
-  pgadmin:
-    container_name: kenac_pg_admin
-    image: dpage/pgadmin4
-    environment:
-        PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin@pgadmin.org}
-        PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-pgadmin}
-        PGADMIN_CONFIG_SERVER_MODE: "False"
-    volumes:
-      - pgadmin:/var/lib/pgadmin
-    ports:
-      - "5050:80"
-    networks:
-      - kenac_bank_network
-
-  mail-dev:
-    container_name: kenac_mail_dev
-    image: maildev/maildev
-    ports:
-      - "1080:80"
-      - "1025:25"
-    networks:
-      - kenac_bank_network
-    restart: unless-stopped
-
-networks:
-  kenac_bank_network:
-      driver: bridge
+      - kenac-net
 
 volumes:
-  postgres:
-  pgadmin:
+  postgres_data:
+
+networks:
+  kenac-net:
