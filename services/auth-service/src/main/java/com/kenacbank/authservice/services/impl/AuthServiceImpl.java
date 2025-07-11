@@ -77,6 +77,7 @@ public class AuthServiceImpl implements AuthService {
                     () -> new RuntimeException("Failed to create client in client service")
             );
 
+
             LOGGER.info("User registered successfully: {}", savedUser.getEmail());
             return ResponseEntity.ok(new GenericResponse("User registered successfully."));
 
