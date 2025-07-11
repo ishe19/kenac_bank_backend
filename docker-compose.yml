@@ -22,12 +22,8 @@ services:
       - "8888:8888"
     environment:
       - SPRING_PROFILES_ACTIVE=default
-      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-server:8761/eureka/
-      - EUREKA_INSTANCE_HOSTNAME=config-service
     networks:
       - kenac-net
-    depends_on:
-      - discovery-server
 
   discovery-server:
     build: ./services/discovery
@@ -38,6 +34,8 @@ services:
       - SERVER_PORT=8761
     networks:
       - kenac-net
+    depends_on:
+      - config-service
 
   gateway-service:
     build: ./services/gateway
@@ -68,8 +66,8 @@ services:
     networks:
       - kenac-net
     depends_on:
-      - discovery-server
       - config-service
+      - discovery-server
       - postgres
 
   client-service:
@@ -88,8 +86,8 @@ services:
     networks:
       - kenac-net
     depends_on:
-      - discovery-server
       - config-service
+      - discovery-server
       - postgres
 
   banking-service:
@@ -108,8 +106,8 @@ services:
     networks:
       - kenac-net
     depends_on:
-      - discovery-server
       - config-service
+      - discovery-server
       - postgres
 
 volumes:
