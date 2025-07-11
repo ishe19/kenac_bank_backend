@@ -1,11 +1,12 @@
-FROM openjdk:17-jdk-slim
-
-# Set working directory
+# Stage 1: Build the application
+FROM maven:3.9.2-eclipse-temurin-17 AS builder
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Copy JAR file into container
-ARG JAR_FILE=target/*jar
-COPY ./target/*.jar app.jar
-
-# Run the application
+# Stage 2: Run the application
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
+EXPOSE 8888
 ENTRYPOINT ["java", "-jar", "app.jar"]
