@@ -1,6 +1,6 @@
 # Kenac Backend Services
 
-This repository contains the backend microservices for **Microbank: A Full-Stack Microservice Banking Platform**. It includes the following modules:
+This repository contains the backend microservices for **Kenac bank: A Full-Stack Microservice Banking Platform**. It includes the following modules:
 
 * **config-service**: Spring Cloud Config Server for centralized configuration
 * **discovery-server**: Eureka Server for service registration and discovery
