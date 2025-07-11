@@ -12,7 +12,7 @@ services:
       - kenac-net
 
   discovery-server:
-    build: ./services/discovery-server
+    build: ./services/discovery-service
     ports:
       - "8761:8761"
     networks:
