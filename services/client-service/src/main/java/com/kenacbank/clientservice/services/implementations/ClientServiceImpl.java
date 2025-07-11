@@ -4,8 +4,10 @@ import com.kenacbank.clientservice.models.dto.ClientDto;
 import com.kenacbank.clientservice.models.entities.Client;
 import com.kenacbank.clientservice.models.requests.ClientRegisterRequest;
 import com.kenacbank.clientservice.models.requests.ClientUpdateRequest;
+import com.kenacbank.clientservice.models.requests.OpenAccountRequest;
 import com.kenacbank.clientservice.models.responses.GenericResponse;
 import com.kenacbank.clientservice.repositories.ClientRepository;
+import com.kenacbank.clientservice.services.interfaces.BankClient;
 import com.kenacbank.clientservice.services.interfaces.ClientService;
 import com.kenacbank.clientservice.utils.CustomerStatus;
 import com.kenacbank.clientservice.utils.DtoMapper;
@@ -44,6 +46,7 @@ public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
     private final DtoMapper dtoMapper;
+    private final BankClient bankClient;
 
 
     /**
@@ -84,9 +87,26 @@ public class ClientServiceImpl implements ClientService {
                     .createdAt(LocalDateTime.now())
                     .build();
 
-            clientRepository.save(client);
+           Client savedClient = clientRepository.save(client);
 
             LOGGER.info("Client registered successfully: {}", client);
+            // Notify the banking service to create an account for the new client
+            OpenAccountRequest usdAccountRequest = OpenAccountRequest.builder()
+                    .clientId(savedClient.getId())
+                    .currency("USD")
+                    .accountType("CURRENT")
+                    .initialDeposit(0.00)
+                    .build();
+
+            OpenAccountRequest zwgAccountRequest = OpenAccountRequest.builder()
+                    .clientId(savedClient.getId())
+                    .currency("ZWG")
+                    .accountType("CURRENT")
+                    .initialDeposit(0.00)
+                    .build();
+
+            bankClient.openClientAccount(usdAccountRequest);
+            bankClient.openClientAccount(zwgAccountRequest);
 
             return ResponseEntity.ok(new GenericResponse("Client registered successfully", true));
 
