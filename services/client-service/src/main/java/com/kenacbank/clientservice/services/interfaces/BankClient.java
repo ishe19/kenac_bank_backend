@@ -11,6 +11,6 @@ import java.util.Optional;
 @FeignClient(name = "banking-service", url = "${application.config.banking-url}")
 public interface BankClient {
 
-    @PostMapping("/banking/open-account")
+    @PostMapping("/open-account")
     Optional<GenericResponse> openClientAccount(@RequestBody OpenAccountRequest request);
 }

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://postgres-db:5432/kenac_banking_db
+    url: jdbc:postgresql://localhost:5432/kenac_banking_db
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: root
@@ -11,9 +11,9 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 server:
-  port: 5092
+    port: 5092
 
 application:
   config:
-    client-url: http://gateway-service:5980/client
-    auth-url: http://gateway-service:5980/auth
+    client-url: http://localhost:5980/client
+    auth-url: http://localhost:5980/auth

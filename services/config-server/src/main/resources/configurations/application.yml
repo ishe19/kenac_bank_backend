@@ -1,12 +1,10 @@
 eureka:
   instance:
-    hostname: config-service
+    hostname: localhost
   client:
     serviceUrl:
-      defaultZone: http://discovery-service:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
 spring:
   cloud:
     config:
       override-system-properties: false
-server:
-  port: 8888
