@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://postgres-db:5432/kenac_banking_db
+    url: jdbc:postgresql://postgres-db:5441/kenac_banking_db
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: root
