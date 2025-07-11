@@ -144,14 +144,6 @@ docker-compose logs -f
 
 ---
 
-## 📄 API Documentation
-
-Swagger UI is available if enabled in each service:
-
-```
-http://localhost:<port>/swagger-ui.html
-```
-
 Or use the included OpenAPI YAML located under `src/main/resources/api-docs` in each module.
 
 ---
