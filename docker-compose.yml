@@ -3,7 +3,7 @@ version: '3.9'
 services:
 
   config-service:
-    build: ./services/config-service
+    build: ./services/config-server
     ports:
       - "8888:8888"
     environment:
