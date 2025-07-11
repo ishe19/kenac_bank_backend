@@ -70,21 +70,21 @@ Each service is a standalone Spring Boot application with its own `pom.xml`, `sr
 1. **Clone Repository**
 
    ```bash
-   git clone https://github.com/your-org/microbank-backend.git
-   cd microbank-backend
+   git clone https://github.com/ishe19/kenac_bank_backend.git
+   cd kenac_bank_backend
    ```
 
 2. **Start Config Server**
 
    ```bash
-   cd config-service
+   cd config-server
    mvn clean spring-boot:run
    ```
 
 3. **Start Discovery Server**
 
    ```bash
-   cd ../discovery-server
+   cd ../discovery
    mvn clean spring-boot:run
    ```
 
@@ -105,7 +105,7 @@ Each service is a standalone Spring Boot application with its own `pom.xml`, `sr
    mvn spring-boot:run
 
    # Gateway Service\   
-   cd ../gateway-service
+   cd ../gateway
    mvn spring-boot:run
    ```
 
@@ -139,11 +139,6 @@ docker-compose logs -f
 ## 🔐 Security & Auth Flow
 
 * **JWT Issuance**: `POST http://localhost:5090/auth/login` returns `accessToken` & `refreshToken`
-* **Token Validation**: Gateway and each service validate JWT signature & expiry on incoming requests.
+* **Token Validation**: Auth service validates JWT signature & expiry on incoming requests.
 * **Blacklist Enforcement**: Auth service introspects blacklist status; tokens for blacklisted users are rejected.
 
----
-
-Or use the included OpenAPI YAML located under `src/main/resources/api-docs` in each module.
-
----
