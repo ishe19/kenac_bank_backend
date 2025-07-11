@@ -1,6 +1,20 @@
 version: '3.9'
 
 services:
+  postgres:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    ports:
+      - "5441:5432"
+    networks:
+      - kenac-net
 
   config-service:
     build: ./services/config-server
@@ -8,22 +22,30 @@ services:
       - "8888:8888"
     environment:
       - SPRING_PROFILES_ACTIVE=default
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-server:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=config-service
     networks:
       - kenac-net
+    depends_on:
+      - discovery-server
 
   discovery-server:
     build: ./services/discovery
     ports:
       - "8761:8761"
+    environment:
+      - EUREKA_INSTANCE_HOSTNAME=discovery-server
+      - SERVER_PORT=8761
     networks:
       - kenac-net
-    depends_on:
-      - config-service
 
   gateway-service:
     build: ./services/gateway
     ports:
       - "5980:5980"
+    environment:
+      - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-server:8761/eureka/
     networks:
       - kenac-net
     depends_on:
@@ -34,6 +56,15 @@ services:
     build: ./services/auth-service
     ports:
       - "5090:5090"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5441/kenac_auth_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-server:8761/eureka/
+      - APPLICATION_CONFIG_CLIENT_URL=http://gateway-service:5980/client
+      - APPLICATION_CONFIG_BANKING_URL=http://gateway-service:5980/banking
+      - SERVER_PORT=5090
     networks:
       - kenac-net
     depends_on:
@@ -45,6 +76,15 @@ services:
     build: ./services/client-service
     ports:
       - "5091:5091"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5441/kenac_customer_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-server:8761/eureka/
+      - APPLICATION_CONFIG_BANKING_URL=http://gateway-service:5980/banking
+      - APPLICATION_CONFIG_AUTH_URL=http://gateway-service:5980/auth
+      - SERVER_PORT=5091
     networks:
       - kenac-net
     depends_on:
@@ -56,25 +96,21 @@ services:
     build: ./services/banking-service
     ports:
       - "5092:5092"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5441/kenac_banking_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-server:8761/eureka/
+      - APPLICATION_CONFIG_CLIENT_URL=http://gateway-service:5980/client
+      - APPLICATION_CONFIG_AUTH_URL=http://gateway-service:5980/auth
+      - SERVER_PORT=5092
     networks:
       - kenac-net
     depends_on:
       - discovery-server
       - config-service
       - postgres
-
-  postgres:
-    image: postgres:14
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: root
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5441:5432"
-    networks:
-      - kenac-net
 
 volumes:
   postgres_data:
