@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5441/kenac_auth_db
+    url: jdbc:postgresql://postgres-db:5432/kenac_auth_db
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: root
@@ -21,5 +21,5 @@ application:
       refresh-token:
         expiration: 604800000
   config:
-    client-url: http://localhost:5980/client
-    banking-url: http://localhost:5980/banking
+    client-url: http://gateway-service:5980/client
+    banking-url: http://gateway-service:5980/banking
