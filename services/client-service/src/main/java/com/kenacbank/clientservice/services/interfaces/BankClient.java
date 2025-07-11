@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 
-@FeignClient(name = "bank-service", url = "${application.config.banking-url}")
+@FeignClient(name = "banking-service", url = "${application.config.banking-url}")
 public interface BankClient {
 
     @PostMapping("/banking/open-account")
